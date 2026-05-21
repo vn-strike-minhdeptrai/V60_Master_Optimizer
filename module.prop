@@ -1,7 +1,7 @@
-id=v60_master_optimizer
-name=V60 Master Optimizer
-version=v1.0
-versionCode=10
-author=minhdeptrai
-description=minhdeptrai is here
+id=V60_Master_Optimizer
+name=V60 Master Optimizer v2.0 (by Minh + Grok)
+version=v2.0
+versionCode=200
+author=vn-strike-minhdeptrai + Grok
+description=Dynamic optimizer LG V60 A13: Game mạnh-mát, Balanced mượt đa nhiệm, Battery siêu trâu. Giữ DAC + Music. WebUI.
 banner=banner/banner.jpg

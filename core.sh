@@ -1,58 +1,40 @@
 #!/system/bin/sh
-ACTION=$1
+MODE=$1
+LOG=/data/adb/V60.log
 
-MODDIR="$(dirname $0)"
-HOSTS_ADBLOCK="$MODDIR/hosts.adblock"
-URL_GLOBAL="https://cdn.jsdelivr.net/gh/StevenBlack/hosts@master/hosts"
-URL_VN="https://cdn.jsdelivr.net/gh/bigdargon/hostsVN@master/hosts"
-
-case "$ACTION" in
-    "game")
+case $MODE in
+    game)
+        echo "=== GAME MODE (Mạnh + Mát) ==="
         for cpu in /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor; do echo "performance" > $cpu 2>/dev/null; done
-        echo "🔥 Đã kích hoạt chế độ Gaming!"
+        echo 1 > /sys/class/kgpu/kgpu/boost 2>/dev/null || true
+        echo "performance" > /sys/class/kgpu/kgpu/governor 2>/dev/null || true
+        # Thermal guard
+        echo 45 > /sys/class/thermal/thermal_zone*/trip_point_*_temp 2>/dev/null || true
+        settings put global window_animation_scale 0.5
+        settings put global transition_animation_scale 0.5
+        settings put global animator_duration_scale 0.5
+        echo "Game mode: Max perf + thermal control" >> $LOG
+        echo "🔥 Game mode activated!"
         ;;
-    "save")
-        for cpu in /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor; do echo "schedutil" > $cpu 2>/dev/null; done
-        echo "🍃 Đã kích hoạt chế độ Tiết kiệm pin!"
-        ;;
-    "adblock")
-        # Dùng nsenter để check trạng thái ở ngoài phòng khách
-        if nsenter -t 1 -m grep -q "StevenBlack" /system/etc/hosts 2>/dev/null; then
-            # Đang Bật -> Dùng nsenter lột mặt nạ Toàn cục
-            nsenter -t 1 -m umount /system/etc/hosts 2>/dev/null
-            echo "🔓 Đã TẮT chặn quảng cáo! (Mẹo: Bật/Tắt Máy bay để reset mạng)"
-        else
-            if [ ! -s "$HOSTS_ADBLOCK" ]; then
-                echo "⏳ Đang dung hợp Siêu bộ lọc Global + VN..."
-                curl -sL -k "$URL_GLOBAL" -o "$MODDIR/hosts.global" || /data/adb/ap/bin/busybox wget -qO "$MODDIR/hosts.global" "$URL_GLOBAL"
-                curl -sL -k "$URL_VN" -o "$MODDIR/hosts.vn" || /data/adb/ap/bin/busybox wget -qO "$MODDIR/hosts.vn" "$URL_VN"
-                
-                echo "127.0.0.1 localhost" > "$HOSTS_ADBLOCK"
-                echo "::1 localhost" >> "$HOSTS_ADBLOCK"
-                cat "$MODDIR/hosts.global" "$MODDIR/hosts.vn" | grep "^0.0.0.0" | sort -u >> "$HOSTS_ADBLOCK"
-                rm -f "$MODDIR/hosts.global" "$MODDIR/hosts.vn"
-                chmod 644 "$HOSTS_ADBLOCK"
-            fi
 
-            if [ -s "$HOSTS_ADBLOCK" ]; then
-                # Ép mặt nạ Toàn cục bằng nsenter
-                nsenter -t 1 -m mount --bind "$HOSTS_ADBLOCK" /system/etc/hosts
-                echo "🛡️ Đã BẬT chặn QC Toàn Cục! (Hãy Reset mạng)"
-            else
-                echo "⚠️ Lỗi: Không thể tải Data. Kiểm tra lại mạng!"
-                rm -f "$HOSTS_ADBLOCK"
-            fi
-        fi
+    battery)
+        echo "=== BATTERY SAVER ==="
+        for cpu in /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor; do echo "powersave" > $cpu 2>/dev/null; done
+        settings put global window_animation_scale 0
+        settings put global transition_animation_scale 0
+        am set-inactive --user 0 com.google.android.gms 2>/dev/null
+        echo 100 > /proc/sys/vm/swappiness
+        echo "Battery mode - Pin trâu max" >> $LOG
+        echo "🍃 Battery Saver activated!"
         ;;
-    "ram")
-        sync; echo 3 > /proc/sys/vm/drop_caches
-        echo "🚀 Đã giải phóng RAM!"
-        ;;
-    "info")
-        TEMP=$(cat /sys/class/thermal/thermal_zone0/temp 2>/dev/null)
-        TEMP_C=$((TEMP / 1000))
-        FREQ=$(cat /sys/devices/system/cpu/cpu7/cpufreq/scaling_cur_freq 2>/dev/null)
-        FREQ_MHZ=$((FREQ / 1000))
-        echo "${TEMP_C}|${FREQ_MHZ}"
+
+    balanced|*)
+        echo "=== BALANCED (Mượt + Đa nhiệm) ==="
+        for cpu in /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor; do echo "schedutil" > $cpu 2>/dev/null; done
+        settings put global window_animation_scale 0.75
+        settings put global transition_animation_scale 0.75
+        settings put global animator_duration_scale 0.75
+        echo "Balanced mode - Mượt + đa nhiệm tốt" >> $LOG
+        echo "⚖️ Balanced mode activated!"
         ;;
 esac
