@@ -1,5 +1,21 @@
+# Ép hệ thống dùng phần cứng (GPU) để render giao diện 2D/3D thay vì CPU
 debug.sf.hw=1
 debug.egl.hw=1
-debug.hwui.renderer=skiavk
-windowsmgr.max_events_per_sec=275
-debug.hwui.render_thread=1
+video.accelerate.hw=1
+debug.performance.tuning=1
+
+# Tối ưu SurfaceFlinger (Trình điều khiển hiển thị màn hình)
+# Tăng số lượng buffer giúp chống khựng (stutter) khi vuốt cuộn nhanh
+ro.surface_flinger.max_frame_buffer_acquired_buffers=3
+# Chấp nhận các khung hình chưa có tín hiệu đồng bộ để giảm độ trễ
+debug.sf.latch_unsignaled=1
+
+# Tinh chỉnh độ nhạy cảm ứng (Giảm độ trễ từ lúc chạm đến lúc màn hình nhận)
+view.touch_slop=2
+touch.presure.scale=0.001
+
+# Tối ưu quản lý RAM và Dalvik VM
+# Bắt hệ thống dọn rác RAM hiệu quả hơn
+dalvik.vm.dex2oat-filter=speed
+dalvik.vm.dex2oat-threads=4
+ro.sys.fw.bg_apps_limit=32

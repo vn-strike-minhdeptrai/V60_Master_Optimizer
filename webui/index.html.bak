@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minh Đẹp Trai - V60 Optimizer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-image: url('bg.jpg');
+            background-color: #2d3748;
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            
+            font-family: 'Pacifico', cursive;
+            font-weight: 400; 
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+            
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+        }
+
+        .lang-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 20px;
+            padding: 6px 16px;
+            font-family: sans-serif;
+            font-size: 14px;
+            font-weight: bold;
+            text-shadow: none;
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+            user-select: none;
+        }
+
+        .lang-badge:active {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(0.95);
+        }
+
+        h1.title {
+            font-size: 46px;
+            margin-top: 60px;
+            margin-bottom: 25px;
+            letter-spacing: 1px;
+        }
+
+        /* Khung trạng thái tổng */
+        .status-container {
+            width: 90%;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        /* Các thanh trạng thái thành phần */
+        .status-panel {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 20px;
+            padding: 12px;
+            text-align: center;
+            font-size: 22px;
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+        }
+
+        h2.subtitle {
+            font-size: 30px;
+            margin-bottom: 20px;
+        }
+
+        .btn-container {
+            width: 90%;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .btn-glass {
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            border-radius: 20px;
+            padding: 16px;
+            font-size: 26px;
+            font-family: 'Pacifico', cursive;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            transition: transform 0.1s, background 0.1s;
+            cursor: pointer;
+        }
+
+        .btn-glass:active {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(0.95);
+        }
+
+        /* Mã màu sắc cho các chế độ */
+        .text-blue { color: #4dabf7; }
+        .text-red { color: #ff6b6b; }
+        .text-green { color: #69db7c; }
+        .text-yellow { color: #ffd43b; }
+    </style>
+</head>
+<body>
+    <div id="lang-btn" class="lang-badge" onclick="toggleLanguage()">🇻🇳 VI</div>
+
+    <h1 class="title">minhdeptrai</h1>
+
+    <div class="status-container">
+        <div class="status-panel">
+            <span id="lbl-mode">Chế độ:</span> 
+            <span id="txt-mode" class="text-blue" data-state="balance">Cân bằng</span>
+        </div>
+        <div class="status-panel">
+            <span id="lbl-ad">Chặn QC:</span> 
+            <span id="txt-ad" class="text-green" data-state="on">Đã bật</span>
+        </div>
+    </div>
+
+    <h2 id="subtitle-text" class="subtitle">Bảng Điều Khiển Module</h2>
+
+    <div class="btn-container">
+        <button id="btn-balance" onclick="sendCommand('balance')" class="btn-glass text-blue">⚖️ Chế độ Cân bằng</button>
+        <button id="btn-gaming" onclick="sendCommand('gaming')" class="btn-glass text-red">🔥 Chế độ Gaming</button>
+        <button id="btn-eco" onclick="sendCommand('eco')" class="btn-glass text-green">🍃 Chế độ Tiết kiệm</button>
+        <button id="btn-adblock" onclick="sendCommand('adblock')" class="btn-glass">🛡️ Bật/Tắt Chặn QC</button>
+        <button id="btn-ram" onclick="sendCommand('ram')" class="btn-glass">🚀 Dọn Rác RAM</button>
+    </div>
+
+    <script>
+        const langData = {
+            vi: {
+                badge: "🇻🇳 VI", lblMode: "Chế độ hiện tại:", lblAd: "Bộ lọc quảng cáo:", subtitle: "Bảng Điều Khiển Module",
+                btnBalance: "⚖️ Chế độ Cân bằng", btnGaming: "🔥 Chế độ Gaming", btnEco: "🍃 Chế độ Tiết kiệm",
+                btnAdblock: "🛡️ Bật/Tắt Chặn QC", btnRam: "🚀 Dọn Rác RAM",
+                stateBalance: "⚖️ Cân bằng", stateGaming: "🔥 Gaming", stateEco: "🍃 Tiết kiệm",
+                stateAdOn: "🔒 Đã bật", stateAdOff: "🔓 Đã tắt", processing: "Đang xử lý...", statusError: "Lỗi kết nối!"
+            },
+            en: {
+                badge: "🇺🇸 EN", lblMode: "Current Mode:", lblAd: "Adblock Filter:", subtitle: "Module Dashboard",
+                btnBalance: "⚖️ Balance Mode", btnGaming: "🔥 Gaming Mode", btnEco: "🍃 Eco Mode",
+                btnAdblock: "🛡️ Toggle Adblock", btnRam: "🚀 Clean RAM",
+                stateBalance: "⚖️ Balance", stateGaming: "🔥 Gaming", stateEco: "🍃 Eco",
+                stateAdOn: "🔒 Enabled", stateAdOff: "🔓 Disabled", processing: "Processing...", statusError: "Error!"
+            }
+        };
+
+        let currentLang = localStorage.getItem('lg_v60_lang') || 'vi';
+
+        function applyLanguage() {
+            const lang = langData[currentLang];
+            document.getElementById('lang-btn').innerText = lang.badge;
+            document.getElementById('lbl-mode').innerText = lang.lblMode;
+            document.getElementById('lbl-ad').innerText = lang.lblAd;
+            document.getElementById('subtitle-text').innerText = lang.subtitle;
+            document.getElementById('btn-balance').innerText = lang.btnBalance;
+            document.getElementById('btn-gaming').innerText = lang.btnGaming;
+            document.getElementById('btn-eco').innerText = lang.btnEco;
+            document.getElementById('btn-adblock').innerText = lang.btnAdblock;
+            document.getElementById('btn-ram').innerText = lang.btnRam;
+            
+            const modeEl = document.getElementById('txt-mode');
+            const modeState = modeEl.getAttribute('data-state');
+            if (modeState === 'balance') modeEl.innerText = lang.stateBalance;
+            else if (modeState === 'gaming') modeEl.innerText = lang.stateGaming;
+            else if (modeState === 'eco') modeEl.innerText = lang.stateEco;
+            else if (modeState === 'processing') modeEl.innerText = lang.processing;
+
+            const adEl = document.getElementById('txt-ad');
+            const adState = adEl.getAttribute('data-state');
+            if (adState === 'on') adEl.innerText = lang.stateAdOn;
+            else if (adState === 'off') adEl.innerText = lang.stateAdOff;
+            else if (adState === 'processing') adEl.innerText = lang.processing;
+        }
+
+        function toggleLanguage() {
+            currentLang = currentLang === 'vi' ? 'en' : 'vi';
+            localStorage.setItem('lg_v60_lang', currentLang);
+            applyLanguage();
+        }
+
+        // HÀM MỚI: Đồng bộ trạng thái thật từ hệ thống
+        function fetchStatus() {
+            fetch('/cgi-bin/status.sh')
+                .then(response => response.text())
+                .then(data => {
+                    const parts = data.trim().split('|');
+                    if(parts.length !== 2) return;
+                    const mode = parts[0];
+                    const ad = parts[1];
+                    
+                    const modeEl = document.getElementById('txt-mode');
+                    const adEl = document.getElementById('txt-ad');
+
+                    if (mode === 'balance') { modeEl.setAttribute('data-state', 'balance'); modeEl.className = 'text-blue'; }
+                    else if (mode === 'gaming') { modeEl.setAttribute('data-state', 'gaming'); modeEl.className = 'text-red'; }
+                    else if (mode === 'eco') { modeEl.setAttribute('data-state', 'eco'); modeEl.className = 'text-green'; }
+
+                    if (ad === 'ON') { adEl.setAttribute('data-state', 'on'); adEl.className = 'text-green'; }
+                    else { adEl.setAttribute('data-state', 'off'); adEl.className = 'text-red'; }
+                    
+                    applyLanguage();
+                }).catch(err => console.log("Chưa thể đồng bộ trạng thái"));
+        }
+
+        function sendCommand(action) {
+            const lang = langData[currentLang];
+            const modeEl = document.getElementById('txt-mode');
+            const adEl = document.getElementById('txt-ad');
+            
+            if (action === 'balance' || action === 'gaming' || action === 'eco') {
+                modeEl.setAttribute('data-state', 'processing'); modeEl.innerText = lang.processing; modeEl.className = 'text-yellow';
+            } else if (action === 'adblock') {
+                adEl.setAttribute('data-state', 'processing'); adEl.innerText = lang.processing; adEl.className = 'text-yellow';
+            }
+
+            fetch(`/cgi-bin/${action}.sh`)
+                .then(response => response.text())
+                .then(() => {
+                    // CẬP NHẬT: Thay vì tự đoán, gọi lại hàm lấy trạng thái chuẩn từ hệ thống
+                    setTimeout(fetchStatus, 500);
+                })
+                .catch(err => {
+                    if (action === 'adblock') { adEl.innerText = lang.statusError; adEl.className = 'text-red'; }
+                    else { modeEl.innerText = lang.statusError; modeEl.className = 'text-red'; }
+                });
+        }
+        
+        window.onload = () => {
+            applyLanguage();
+            // Lấy trạng thái thật ngay khi vừa load trang
+            fetchStatus(); 
+        }
+    </script>

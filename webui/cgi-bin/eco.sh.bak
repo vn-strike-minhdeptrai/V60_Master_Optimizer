@@ -1,0 +1,13 @@
+#!/system/bin/sh
+echo -e "Content-type: text/plain\n\n"
+
+# đưa cụm nhân lớn về chế độ bảo thủ (chậm tăng xung)
+echo conservative > /sys/devices/system/cpu/cpufreq/policy0/scaling_governor
+echo conservative > /sys/devices/system/cpu/cpufreq/policy4/scaling_governor
+echo conservative > /sys/devices/system/cpu/cpufreq/policy7/scaling_governor
+
+# ép app chính chỉ được chạy trên 4 nhân nhỏ (Silver) và 1 nhân Gold
+echo "0-4" > /dev/cpuset/top-app/cpus
+
+echo "eco" > /data/local/tmp/v60_current_mode
+echo "Tiết kiệm Pin"

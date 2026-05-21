@@ -1,0 +1,8 @@
+#!/system/bin/sh
+echo -e "Content-type: text/plain\n\n"
+
+# đồng bộ dữ liệu I/O và giải phóng toàn bộ Cache, Buffer từ RAM
+sync
+echo 3 > /proc/sys/vm/drop_caches
+
+echo "Đã dọn dẹp RAM!"

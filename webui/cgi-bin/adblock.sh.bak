@@ -1,0 +1,17 @@
+#!/system/bin/sh
+echo -e "Content-type: text/plain\n\n"
+
+STATUS=$(cat /data/local/tmp/v60_adblock_status 2>/dev/null)
+MOD_HOSTS="/data/adb/modules/lg_v60_ea_optimizer/system/etc/hosts"
+
+if [ "$STATUS" = "ON" ]; then
+    # nếu đang BẬT -> Gỡ mount file hosts để trở về mạng bình thường (TẮT)
+    umount /system/etc/hosts 2>/dev/null
+    echo "OFF" > /data/local/tmp/v60_adblock_status
+    echo "OFF"
+else
+    # nếu đang TẮT -> Mount đè file hosts của module vào hệ thống (BẬT)
+    mount -o bind "$MOD_HOSTS" /system/etc/hosts 2>/dev/null
+    echo "ON" > /data/local/tmp/v60_adblock_status
+    echo "ON"
+fi

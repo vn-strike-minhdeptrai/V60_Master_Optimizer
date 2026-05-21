@@ -1,0 +1,13 @@
+#!/system/bin/sh
+echo -e "Content-type: text/plain\n\n"
+
+# đưa các cụm nhân (Silver, Gold, Prime) về chế độ điều phối thông minh của Android
+echo schedutil > /sys/devices/system/cpu/cpufreq/policy0/scaling_governor
+echo schedutil > /sys/devices/system/cpu/cpufreq/policy4/scaling_governor
+echo schedutil > /sys/devices/system/cpu/cpufreq/policy7/scaling_governor
+
+# cho phép app chính dùng toàn bộ 8 nhân
+echo "0-7" > /dev/cpuset/top-app/cpus
+
+echo "balance" > /data/local/tmp/v60_current_mode
+echo "Cân bằng"

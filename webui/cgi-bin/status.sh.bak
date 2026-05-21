@@ -1,0 +1,9 @@
+#!/system/bin/sh
+echo -e "Content-type: text/plain\n\n"
+
+# Đọc file trạng thái ẩn, nếu chưa có thì mặc định là balance/ON
+MODE=$(cat /data/local/tmp/v60_current_mode 2>/dev/null || echo "balance")
+AD=$(cat /data/local/tmp/v60_adblock_status 2>/dev/null || echo "ON")
+
+# Trả về kết quả cho WebUI (Ví dụ: gaming|OFF)
+echo "${MODE}|${AD}"

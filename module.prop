@@ -1,6 +1,7 @@
-id=V60_Master_Optimizer
-name=V60 Master Optimizer
-version=v2.0-anime
-versionCode=200
-author=Minh + Grok
-description=Dynamic Profile (Game/Balanced/Battery) + Anime WebUI + Safe Debloat cho LG V60. Giữ tinh túy DAC, Camera, LG Music. APatch compatible.
+id=lg_v60_ea_optimizer
+name=LG V60 Optimizer & WebUI (EA/Verizon)
+version=v1.0-Beta
+versionCode=100
+author=minhdeptrai
+banner=system/banner.jpg
+description=Tối ưu UI/UX, CPU, Debloat an toàn (Giữ VoLTE), Chặn QC & WebUI điều khiển trực tiếp qua trình duyệt cho LG V60.
