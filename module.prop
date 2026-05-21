@@ -1,7 +1,6 @@
 id=V60_Master_Optimizer
-name=V60 Master Optimizer v2.0 (by Minh + Grok)
-version=v2.0
+name=V60 Master Optimizer
+version=v2.0-anime
 versionCode=200
-author=vn-strike-minhdeptrai + Grok
-description=Dynamic optimizer LG V60 A13: Game mạnh-mát, Balanced mượt đa nhiệm, Battery siêu trâu. Giữ DAC + Music. WebUI.
-banner=banner/banner.jpg
+author=Minh + Grok
+description=Dynamic Profile (Game/Balanced/Battery) + Anime WebUI + Safe Debloat cho LG V60. Giữ tinh túy DAC, Camera, LG Music. APatch compatible.

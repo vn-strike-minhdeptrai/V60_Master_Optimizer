@@ -1,0 +1,8 @@
+# Whitelist - CÁC APP BẢT BUỘC GIỮ LẠI (KHÔNG DISABLE)
+# LG Music, Audio/DAC, Camera, Core LG services
+com.lge.music
+com.lge.camera
+com.lge.audio
+com.lge.sound
+com.lge.lgworld
+# Thêm các package mày muốn giữ

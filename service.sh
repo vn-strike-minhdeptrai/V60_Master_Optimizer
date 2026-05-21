@@ -1,14 +1,14 @@
 #!/system/bin/sh
+# V60_Master_Optimizer - service.sh
+# Late start, apply last profile or default
+
 MODDIR=${0%/*}
 
-sleep 25
+# Wait for boot complete
+while [ "$(getprop sys.boot_completed)" != "1" ]; do sleep 2; done
 
-# Default Balanced mode
-sh $MODDIR/core.sh balanced
+# Apply last used profile or Balanced
+echo "[$(date)] Service started - Applying profile..." >> $MODDIR/logs/service.log
 
-# Adblock nếu có
-if [ -f $MODDIR/hosts.adblock ]; then
-    nsenter -t 1 -m mount --bind $MODDIR/hosts.adblock /system/etc/hosts 2>/dev/null || true
-fi
-
-echo "[V60 Optimizer] Service started - Balanced mode" >> /data/adb/V60.log
+# TODO: read current_profile and apply
+sh $MODDIR/scripts/apply_profile.sh balanced
