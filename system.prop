@@ -1,0 +1,4 @@
+debug.sf.hw=1
+debug.egl.hw=1
+debug.hwui.renderer=skiavk
+windowsmgr.max_events_per_sec=275

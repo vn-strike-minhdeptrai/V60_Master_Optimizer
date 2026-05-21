@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Control Panel | minhdeptrai</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+    <style>
+        body { margin: 0; padding: 20px; background: url('bg.jpg') no-repeat center center fixed; background-size: cover; color: #e0e0e0; font-family: 'Pacifico', cursive; display: flex; flex-direction: column; align-items: center; min-height: 100vh; box-sizing: border-box; backdrop-filter: saturate(1.2) contrast(1.1); position: relative; }
+        #lang-toggle { position: absolute; top: 20px; right: 20px; background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.15); color: #fff; padding: 8px 14px; border-radius: 20px; font-size: 14px; font-family: sans-serif; font-weight: bold; cursor: pointer; transition: 0.2s; z-index: 100; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+        #lang-toggle:active { transform: scale(0.9); background: rgba(255, 255, 255, 0.2); }
+        .header h1 { font-size: 32px; color: #fff; margin: 10px 0 25px 0; font-weight: 400; text-shadow: 0 2px 10px rgba(0,0,0,0.5); }
+        .glass-panel { background: rgba(25, 30, 36, 0.35); backdrop-filter: blur(14px); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 20px; padding: 20px; width: 100%; max-width: 400px; margin-bottom: 15px; box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4); text-align: center; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 100%; max-width: 400px; margin-bottom: 15px; }
+        .stat-box { background: rgba(25, 30, 36, 0.35); backdrop-filter: blur(14px); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 20px; padding: 15px; box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4); text-align: center; }
+        .val { font-size: 26px; color: #ff8a80; font-weight: 700; display: block; font-family: sans-serif;}
+        .lbl { font-size: 14px; color: #a0aab5; font-family: sans-serif; margin-top: 5px; display: block; }
+        .action-btn { background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); color: white; padding: 15px; border-radius: 16px; font-size: 20px; cursor: pointer; width: 100%; font-family: 'Pacifico', cursive; margin-bottom: 10px; transition: 0.2s; letter-spacing: 1px; }
+        .action-btn:active { background: rgba(255, 255, 255, 0.2); transform: scale(0.96); }
+        .btn-game { color: #ff5252; }
+        .btn-save { color: #69f0ae; }
+    </style>
+</head>
+<body>
+    <button id="lang-toggle" onclick="toggleLanguage()">🇻🇳 VI</button>
+    <div class="header"><h1>minhdeptrai</h1></div>
+
+    <div class="grid-2">
+        <div class="stat-box">
+            <span class="val" id="temp">--°C</span><span class="lbl" id="lbl-temp">Nhiệt độ CPU</span>
+        </div>
+        <div class="stat-box">
+            <span class="val" style="color: #ffca28;" id="freq">-- MHz</span><span class="lbl" id="lbl-freq">Tần số Lõi 7</span>
+        </div>
+    </div>
+
+    <div class="glass-panel">
+        <div class="lbl" style="margin-bottom: 15px; font-weight: bold;" id="lbl-ctrl">Bảng Điều Khiển FPatch</div>
+        <button class="action-btn btn-game" id="btn-game" onclick="runAction('game')">🔥 Chế độ Gaming</button>
+        <button class="action-btn btn-save" id="btn-save" onclick="runAction('save')">🍃 Chế độ Tiết kiệm</button>
+        <button class="action-btn" id="btn-adblock" onclick="runAction('adblock')">🛡️ Bật/Tắt Chặn QC</button>
+        <button class="action-btn" id="btn-ram" onclick="runAction('ram')">🚀 Dọn Rác RAM</button>
+    </div>
+
+    <script>
+        const MODDIR = "/data/adb/modules/v60_master_optimizer";
+        const i18n = {
+            vi: { toggleBtn: "🇻🇳 VI", temp: "Nhiệt độ CPU", freq: "Tần số Lõi 7", ctrlPanel: "Bảng Điều Khiển FPatch", btnGame: "🔥 Chế độ Gaming", btnSave: "🍃 Chế độ Tiết kiệm", btnAdblock: "🛡️ Bật/Tắt Chặn QC", btnRam: "🚀 Dọn Rác RAM" },
+            en: { toggleBtn: "🇬🇧 EN", temp: "CPU Temp", freq: "Core 7 Freq", ctrlPanel: "FPatch Control Panel", btnGame: "🔥 Gaming Mode", btnSave: "🍃 Battery Saver", btnAdblock: "🛡️ Toggle Adblock", btnRam: "🚀 Drop RAM Cache" }
+        };
+        let currentLang = 'vi';
+
+        function toggleLanguage() {
+            currentLang = currentLang === 'vi' ? 'en' : 'vi';
+            document.getElementById('lang-toggle').innerText = i18n[currentLang].toggleBtn;
+            document.getElementById('lbl-temp').innerText = i18n[currentLang].temp;
+            document.getElementById('lbl-freq').innerText = i18n[currentLang].freq;
+            document.getElementById('lbl-ctrl').innerText = i18n[currentLang].ctrlPanel;
+            document.getElementById('btn-game').innerText = i18n[currentLang].btnGame;
+            document.getElementById('btn-save').innerText = i18n[currentLang].btnSave;
+            document.getElementById('btn-adblock').innerText = i18n[currentLang].btnAdblock;
+            document.getElementById('btn-ram').innerText = i18n[currentLang].btnRam;
+        }
+
+        const rootApi = window.ksu || window.apatch;
+
+        function parseKsuOutput(res) {
+            let out = "";
+            if (typeof res === 'string') {
+                try {
+                    let obj = JSON.parse(res);
+                    out = obj.stdout || obj.stderr || res;
+                } catch(e) { out = res; }
+            } else if (res && res.stdout !== undefined) {
+                out = res.stdout;
+            }
+            return out.trim();
+        }
+
+        async function runAction(mode) {
+            if (!rootApi) { alert("Lỗi: Không tìm thấy API Root!"); return; }
+            try {
+                let cmd = "sh " + MODDIR + "/core.sh " + mode;
+                let res = await rootApi.exec(cmd);
+                alert(parseKsuOutput(res) || "Thực thi lệnh thành công!");
+            } catch (e) {
+                alert("Lỗi bất thường: " + e.message);
+            }
+        }
+
+        async function loadStats() {
+            if (!rootApi) return;
+            try {
+                let cmd = "sh " + MODDIR + "/core.sh info";
+                let res = await rootApi.exec(cmd);
+                let out = parseKsuOutput(res);
+                
+                let parts = out.split('|');
+                if(parts.length >= 2) { 
+                    document.getElementById('temp').innerText = (parts[0] !== "" ? parts[0] : "--") + '°C'; 
+                    document.getElementById('freq').innerText = (parts[1] !== "" ? parts[1] : "--") + ' MHz'; 
+                }
+            } catch (e) {
+                console.error(e);
+            }
+        }
+        
+        setInterval(loadStats, 3000); 
+        window.onload = loadStats;
+    </script>
+</body>
+</html>
